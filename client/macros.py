@@ -1,9 +1,5 @@
 from typing import Dict, Tuple
-
-try:
-    import ujson as json
-except ImportError:
-    import json
+from intercept import json
 
 
 class MacroHolder:

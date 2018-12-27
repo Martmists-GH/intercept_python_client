@@ -136,6 +136,10 @@ class CommandSuggest(SuggestPart):
                 "hope.xyz": {},
                 "ferretuniverse.us": {},
             },
+            "macro": {
+                "add": {},
+                "remove": {},
+            },
             "quit": {},
         }
 
@@ -160,6 +164,8 @@ class CommandSuggest(SuggestPart):
                 current = current["*"]
             else:
                 break
+
+        current = {k: v for k, v in current.items() if (not arg) or k.startswith(arg)}
 
         for key in current.keys():
             if key.startswith(args[-1]) and key != args[-1]:
