@@ -17,7 +17,13 @@ class CommandSuggest(SuggestPart):
                 "web": {},
             },
             "chats": {
-                "admin": {},
+                "admin": {
+                    "*": {
+                        "setpass": {},
+                        "users": {},
+                        "kick": {},
+                    },
+                },
                 "create": {},
                 "info": {},
                 "join": {},
@@ -25,11 +31,6 @@ class CommandSuggest(SuggestPart):
                 "list": {},
                 "send": {},
                 "clear": {},
-                "*": {
-                    "setpass": {},
-                    "users": {},
-                    "kick": {},
-                }
             },
             "clear": {},
             "vol": {},
@@ -150,7 +151,7 @@ class CommandSuggest(SuggestPart):
         pass
 
     def get_autocomplete(self, _, document):
-        args = document.text.strip().split(" ")
+        args = document.text.split(" ")
 
         current = self.commands
 
@@ -165,7 +166,8 @@ class CommandSuggest(SuggestPart):
             else:
                 break
 
-        current = {k: v for k, v in current.items() if (not args[-1]) or k.startswith(args[-1])}
+        current = {k: v for k, v in current.items()
+                   if k.startswith(args[-1]) and k != "*"}
 
         for key in current.keys():
             if key.startswith(args[-1]) and key != args[-1]:

@@ -182,7 +182,7 @@ class UI(Client):
         return to_formatted_text(ANSI(arg))
 
     def err(self, message: str):
-        self.set_chat_output(f"{Fore.RED}{converted_color_codes(message)}{Fore.RESET}")
+        self.set_output(f"{Fore.RED}{converted_color_codes(message)}{Fore.RESET}")
 
     def set_chat_output(self, text: str):
         new_text = (self.chat_text + "\n" + text).strip()
@@ -250,6 +250,10 @@ class UI(Client):
         macros = MacroHolder()
 
         while self._loop:
+            # TODO: Update these when they change
+            macros.macros["self"] = self.own_ip
+            macros.macros["pass"] = self.own_pass
+
             while not self.commands:
                 await asyncio.sleep(0.1)
 
@@ -265,31 +269,37 @@ class UI(Client):
                         await self.command(" ".join([command, *args]))
 
                 elif command == "macro":
-                    if args and args[0] in ("add", "remove"):
+                    if args and args[0] in ("add", "remove", "list"):
                         sub = args.pop(0)
                         if sub == "add":
                             if len(args) >= 2:
                                 macros += args[0], " ".join(args[1:])
                             else:
                                 self.set_output("Usage: macro add <name> <value>")
-                        else:
+                        elif sub == "remove":
                             if args:
                                 macros -= args[0]
                             else:
                                 self.set_output("Usage: macro remove <name>")
+                        else:
+                            self.set_output("Macros:")
+                            for key in sorted(list(macros)):
+                                self.set_output(f"${key} -> {macros[key]}")
 
                     else:
-                        self.set_output("Usage: macro [add/remove] ...")
+                        self.set_output("Usage: macro [add/remove/list] ...")
 
                 elif command == "clear":
                     self.clear()
 
                 elif command == "quit":
-                    self.stop()
                     self._loop = False
                     self.run_again = False
+                    self.stop()
+                    self.app.exit()
 
                 else:
                     await self.command(" ".join([command, *args]))
+
             except Exception as e:  # pylint: disable=broad-except
                 self.err(repr(e))
