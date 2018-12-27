@@ -167,6 +167,7 @@ class UI(Client):
         self.set_chat_output(converted_color_codes(e.msg))
 
     def on_event(self, e: Event):
+        # self.set_output(str(e))
         self.suggest.set_last_items(e)
         if isinstance(e, MessageEvent) and not isinstance(e, ChatEvent):
             if isinstance(e, BroadcastEvent):
@@ -174,7 +175,7 @@ class UI(Client):
             else:
                 self.set_output(converted_color_codes(e.msg))
 
-    def on_error(self, e: ErrorEvent):
+    def event_error(self, e: ErrorEvent):
         self.err(e.error)
 
     @staticmethod
