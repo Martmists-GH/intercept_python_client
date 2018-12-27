@@ -150,7 +150,7 @@ class CommandSuggest(SuggestPart):
         pass
 
     def get_autocomplete(self, _, document):
-        args = document.text.split(" ")
+        args = document.text.strip().split(" ")
 
         current = self.commands
 
@@ -165,7 +165,7 @@ class CommandSuggest(SuggestPart):
             else:
                 break
 
-        current = {k: v for k, v in current.items() if (not arg) or k.startswith(arg)}
+        current = {k: v for k, v in current.items() if (not args[-1]) or k.startswith(args[-1])}
 
         for key in current.keys():
             if key.startswith(args[-1]) and key != args[-1]:
