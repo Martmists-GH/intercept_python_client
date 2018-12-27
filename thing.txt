@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/usr/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "./__main__.py", line 1, in <module>
+    from client.ui import UI
+  File "./client/ui.py", line 220
+    await self.command("dc")
+    ^
+SyntaxError: 'await' outside async function
